@@ -2,8 +2,10 @@ package com.fnb.usermanagement.enitity;
 
 import com.fnb.usermanagement.enums.UserRoles;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.management.relation.Role;
 import java.time.LocalDateTime;
@@ -14,6 +16,8 @@ import static com.fnb.usermanagement.enums.UserRoles.CUSTOMER;
 @Table(name = "users")
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
 
     @Id

@@ -1,29 +1,35 @@
 package com.fnb.usermanagement.service.authServiceImpl;
 
 import com.fnb.usermanagement.dto.RegisterRequest;
-import com.fnb.usermanagement.dto.RegisterResponse;
+import com.fnb.usermanagement.dto.UserResponseDTO;
 import com.fnb.usermanagement.enitity.User;
 import com.fnb.usermanagement.enitity.UserCredentials;
-import com.fnb.usermanagement.enums.UserRoles;
 import com.fnb.usermanagement.exception.EmailAlreadyExistsException;
+import com.fnb.usermanagement.mapper.UserMapper;
 import com.fnb.usermanagement.repository.UserCredentialsRepo;
 import com.fnb.usermanagement.repository.UserRepo;
+import com.fnb.usermanagement.service.AuthService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
+
 @AllArgsConstructor
 @Service
-public class AuthServiceImpl implements AuthService{
+public class AuthServiceImpl implements AuthService {
     private final UserRepo userRepo;
 //    private final PasswordEncoder passwordEncoder;
 private final UserCredentialsRepo userCredentialsRepo;
 private final PasswordEncoder passwordEncoder;
+private final UserMapper userMapper;
 
 @Override
 @Transactional
-   public RegisterResponse register(RegisterRequest registerRequest){
+   public UserResponseDTO register(RegisterRequest registerRequest){
        //---TEST IF USER EXISTS--
        if(userRepo.existsByEmail(registerRequest.getEmail())){
            throw new EmailAlreadyExistsException(registerRequest.getEmail());
@@ -49,17 +55,7 @@ private final PasswordEncoder passwordEncoder;
        userCredentialsRepo.save(userCredentials);
 
         //Return RegisterResponse for client
-        return toResponse(user);
+        return userMapper.toResponse(user);
+    }
     }
 
-    RegisterResponse toResponse(User  user){
-       return RegisterResponse.builder()
-                .customerId(user.getCustomerId())
-                .firstname(user.getFirstName())
-                .surname(user.getSurname())
-                .email(user.getEmail())
-                .userRole(user.getUserRole())
-                .createdAt(user.getCreatedAt())
-                .build();
-    }
-}
