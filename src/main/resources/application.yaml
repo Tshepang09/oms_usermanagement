@@ -16,4 +16,5 @@ spring:
       ddl-auto: update
 
 jwt:
-  secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+  secret: "fnb-b4-bootcamp-shared-jwt-signing-secret-change-me-32bytes-min"
+  expiration-ms: 3600000 #an hour
