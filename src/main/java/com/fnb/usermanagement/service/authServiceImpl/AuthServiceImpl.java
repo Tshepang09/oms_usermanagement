@@ -1,5 +1,7 @@
 package com.fnb.usermanagement.service.authServiceImpl;
 
+import com.fnb.usermanagement.dto.LoginRequest;
+import com.fnb.usermanagement.dto.LoginResponse;
 import com.fnb.usermanagement.dto.RegisterRequest;
 import com.fnb.usermanagement.dto.UserResponseDTO;
 import com.fnb.usermanagement.enitity.User;
@@ -9,6 +11,7 @@ import com.fnb.usermanagement.mapper.UserMapper;
 import com.fnb.usermanagement.repository.UserCredentialsRepo;
 import com.fnb.usermanagement.repository.UserRepo;
 import com.fnb.usermanagement.service.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -57,5 +60,20 @@ private final UserMapper userMapper;
         //Return RegisterResponse for client
         return userMapper.toResponse(user);
     }
+
+    @Override
+    public LoginResponse login(LoginRequest loginRequest) {
+        //Verify credentials using UserRepo(Finding user in the db)
+           User user = userRepo.findByEmail(loginRequest.getEmail());
+
+        //Create token
+
+        return LoginResponse.builder()
+                .customerId(user.getCustomerId())
+                .email(user.getEmail())
+                .token()
+                .role(user.getUserRole().name())
+                .build();
     }
+}
 
